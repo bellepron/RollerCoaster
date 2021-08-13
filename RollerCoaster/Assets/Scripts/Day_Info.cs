@@ -16,11 +16,11 @@ public class Day_Info : ScriptableObject
 
     [Header("Group Sizes")] // N times Pi input ************
     [Space]
-    [Range(1, 10)] public int[] Pi;
+    [Range(1, 20)] public int[] Pi;
 
-    public void OnAfterDeserialize()
-    {
-        Pi = new int[N];
-    }
+    // public void OnAfterDeserialize()
+    // {
+    //     Pi = new int[N];
+    // }
 
 }

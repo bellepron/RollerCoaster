@@ -15,6 +15,11 @@ public class Calculator : MonoBehaviour
     public int dirham = 0;
     int firstGroupSize;
 
+
+
+    int howManyGroup;
+    List<int> howManyGroupList;
+
     void Start()
     {
         L = day_Info.L;
@@ -26,35 +31,41 @@ public class Calculator : MonoBehaviour
         {
             P_List.Add(day_Info.Pi[i]);
         }
+
+        FindObjectOfType<Creator>().Init_FromCalculator(P_List, N);
     }
 
     public int Calculate()
     {
+        howManyGroupList = new List<int>();
+
         while (C > 0)
         {
-            int cycle = 0;
+            bool available = true;
             int temporaryDirham = 0;
-            firstGroupSize = P_List[0];
-            P_List.RemoveAt(0);
-
-            Debug.Log(firstGroupSize);
+            howManyGroup = 0;
 
             do
             {
+                firstGroupSize = P_List[0];
                 if (L - temporaryDirham - firstGroupSize >= 0)
                 {
+                    P_List.RemoveAt(0);
+                    // Debug.Log(firstGroupSize);
                     temporaryDirham += firstGroupSize;
                     dirham += firstGroupSize;
                     P_List.Add(firstGroupSize);
+                    howManyGroup++;
                 }
-                else
+                if (L - temporaryDirham - firstGroupSize < 0)
                 {
                     temporaryDirham = 0;
                     C--;
-                    cycle = 1;
+                    available = false;
+                    howManyGroupList.Add(howManyGroup);
                 }
             }
-            while (cycle == 0);
+            while (available);
         }
 
         return dirham;
@@ -62,9 +73,11 @@ public class Calculator : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && day_Info != null)
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            Debug.Log(Calculate());
+            Calculate();
+            Debug.Log(howManyGroupList.Count);
+            //FindObjectOfType<Creator>().GetIn(howManyGroupList);
         }
     }
 }
