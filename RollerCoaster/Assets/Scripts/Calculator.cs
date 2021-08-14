@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Calculator : MonoBehaviour
 {
+    public static Calculator Instance;
     [SerializeField] Day_Info day_Info;
 
     int L;
@@ -16,9 +17,14 @@ public class Calculator : MonoBehaviour
     int firstGroupSize;
 
 
-
-    int howManyGroup;
     List<int> howManyGroupList;
+    public List<int> dailyRideEarnings;
+
+    private void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+    }
 
     void Start()
     {
@@ -35,37 +41,38 @@ public class Calculator : MonoBehaviour
         FindObjectOfType<Creator>().Init_FromCalculator(P_List, N);
     }
 
-    public int Calculate()
+    public int Calculate() // IMPORTANT TO DO: bir grup birden çok binebiliyor. Örn: L:100,N:1,Pi:[2];
     {
         howManyGroupList = new List<int>();
+        dailyRideEarnings = new List<int>();
 
         while (C > 0)
         {
             bool available = true;
             int temporaryDirham = 0;
-            howManyGroup = 0;
+            int currentRideCapacity = 0;
 
-            do
+            for (; available;)
             {
                 firstGroupSize = P_List[0];
+
                 if (L - temporaryDirham - firstGroupSize >= 0)
                 {
                     P_List.RemoveAt(0);
-                    // Debug.Log(firstGroupSize);
                     temporaryDirham += firstGroupSize;
                     dirham += firstGroupSize;
                     P_List.Add(firstGroupSize);
-                    howManyGroup++;
                 }
-                if (L - temporaryDirham - firstGroupSize < 0)
+                else
                 {
+                    currentRideCapacity = temporaryDirham; // sürüşten gelen para (bunu listeye ekle)(listedeki sayıların toplamı günlük kazanç olacak)
+                    dailyRideEarnings.Add(currentRideCapacity);
+
                     temporaryDirham = 0;
                     C--;
                     available = false;
-                    howManyGroupList.Add(howManyGroup);
                 }
             }
-            while (available);
         }
 
         return dirham;
@@ -76,8 +83,7 @@ public class Calculator : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Calculate();
-            Debug.Log(howManyGroupList.Count);
-            //FindObjectOfType<Creator>().GetIn(howManyGroupList);
+            FindObjectOfType<Creator>().ReadyToGetIn(dailyRideEarnings);
         }
     }
 }
