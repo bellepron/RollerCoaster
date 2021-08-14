@@ -10,9 +10,9 @@ public class Calculator : MonoBehaviour
 
     int L;
     int C;
-    int N;
+    public int N;
     int[] Pi;
-    public List<int> P_List = new List<int>(4);
+    public List<int> P_List;
 
     public int dirham = 0;
     int firstGroupSize;

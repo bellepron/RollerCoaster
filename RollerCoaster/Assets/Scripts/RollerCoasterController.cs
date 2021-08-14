@@ -45,17 +45,19 @@ public class RollerCoasterController : MonoBehaviour
     IEnumerator GetOffTheRollerCoaster(List<GameObject> passengers)
     {
         yield return new WaitForSeconds(3);
+        int index = Calculator.Instance.N - Calculator.Instance.howManyGroupsInRide[0];
         for (int i = 0; i < Calculator.Instance.howManyGroupsInRide[0]; i++)
         {
-            for (int j = 0; j < Calculator.Instance.P_List[Calculator.Instance.P_List.Count - Calculator.Instance.howManyGroupsInRide[0] + i]; j++)
+            for (int j = 0; j < Calculator.Instance.P_List[index + i]; j++)
             {
                 Vector3 endOfTheQueue = new Vector3(j, 0, -20 - i);
+
                 if (i == 0)
                     passengers[j].transform.DOMove(endOfTheQueue, 2);
                 if (i == 1)
-                    passengers[j + Calculator.Instance.P_List[Calculator.Instance.P_List.Count - Calculator.Instance.howManyGroupsInRide[0]]].transform.DOMove(endOfTheQueue, 2);
+                    passengers[j + Calculator.Instance.P_List[index]].transform.DOMove(endOfTheQueue, 2);
                 if (i == 2)
-                    passengers[j + Calculator.Instance.P_List[Calculator.Instance.P_List.Count - Calculator.Instance.howManyGroupsInRide[0] + 1]+Calculator.Instance.P_List[Calculator.Instance.P_List.Count - Calculator.Instance.howManyGroupsInRide[0]]].transform.DOMove(endOfTheQueue, 2);
+                    passengers[j + Calculator.Instance.P_List[index + 1] + Calculator.Instance.P_List[index]].transform.DOMove(endOfTheQueue, 2);
             }
         }
         // for (int j = 0; j < Calculator.Instance.P_List[Calculator.Instance.P_List.Count - Calculator.Instance.howManyGroupsInRide[0]]; j++)
