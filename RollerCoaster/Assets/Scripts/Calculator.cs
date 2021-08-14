@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Calculator : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class Calculator : MonoBehaviour
     int C;
     int N;
     int[] Pi;
-    List<int> P_List = new List<int>(4);
+    public List<int> P_List = new List<int>(4);
 
     public int dirham = 0;
     int firstGroupSize;
@@ -19,6 +20,8 @@ public class Calculator : MonoBehaviour
 
     List<int> howManyGroupList;
     public List<int> dailyRideEarnings;
+
+    public List<int> howManyGroupsInRide;
 
     private void Awake()
     {
@@ -52,6 +55,10 @@ public class Calculator : MonoBehaviour
             int temporaryDirham = 0;
             int currentRideCapacity = 0;
 
+            howManyGroupsInRide = new List<int>();
+            int countt = 0;
+
+
             for (; available;)
             {
                 firstGroupSize = P_List[0];
@@ -62,9 +69,13 @@ public class Calculator : MonoBehaviour
                     temporaryDirham += firstGroupSize;
                     dirham += firstGroupSize;
                     P_List.Add(firstGroupSize);
+
+                    countt++;
                 }
                 else
                 {
+                    howManyGroupsInRide.Add(countt);
+
                     currentRideCapacity = temporaryDirham; // sürüşten gelen para (bunu listeye ekle)(listedeki sayıların toplamı günlük kazanç olacak)
                     dailyRideEarnings.Add(currentRideCapacity);
 
@@ -84,6 +95,8 @@ public class Calculator : MonoBehaviour
         {
             Calculate();
             FindObjectOfType<Creator>().ReadyToGetIn(dailyRideEarnings);
+            Debug.Log(Calculator.Instance.P_List[Calculator.Instance.P_List.Count - Calculator.Instance.howManyGroupsInRide[0] + 1]);
+            // Debug.Log(howManyGroupsInRide[0]);
         }
     }
 }

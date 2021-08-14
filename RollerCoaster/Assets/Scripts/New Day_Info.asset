@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: New Day_Info
   m_EditorClassIdentifier: 
   L: 10
-  C: 2
+  C: 1
   N: 5
-  Pi: 0900000001000000020000000200000002000000
+  Pi: 0500000003000000020000000200000002000000

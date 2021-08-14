@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using System.Linq;
 
 public class RollerCoasterController : MonoBehaviour
 {
@@ -44,13 +45,29 @@ public class RollerCoasterController : MonoBehaviour
     IEnumerator GetOffTheRollerCoaster(List<GameObject> passengers)
     {
         yield return new WaitForSeconds(3);
-        foreach (GameObject passenger in passengers)
+        for (int i = 0; i < Calculator.Instance.howManyGroupsInRide[0]; i++)
         {
-            passenger.transform.parent = null;
-
-            Vector3 endOfTheQueue = new Vector3(0, 0, -30); // Gruplara göre yolla
-            passenger.transform.DOMove(endOfTheQueue, 2);
+            for (int j = 0; j < Calculator.Instance.P_List[Calculator.Instance.P_List.Count - Calculator.Instance.howManyGroupsInRide[0] + i]; j++)
+            {
+                Vector3 endOfTheQueue = new Vector3(j, 0, -20 - i);
+                if (i == 0)
+                    passengers[j].transform.DOMove(endOfTheQueue, 2);
+                if (i == 1)
+                    passengers[j + Calculator.Instance.P_List[Calculator.Instance.P_List.Count - Calculator.Instance.howManyGroupsInRide[0]]].transform.DOMove(endOfTheQueue, 2);
+                if (i == 2)
+                    passengers[j + Calculator.Instance.P_List[Calculator.Instance.P_List.Count - Calculator.Instance.howManyGroupsInRide[0] + 1]+Calculator.Instance.P_List[Calculator.Instance.P_List.Count - Calculator.Instance.howManyGroupsInRide[0]]].transform.DOMove(endOfTheQueue, 2);
+            }
         }
+        // for (int j = 0; j < Calculator.Instance.P_List[Calculator.Instance.P_List.Count - Calculator.Instance.howManyGroupsInRide[0]]; j++)
+        // {
+        //     Vector3 endOfTheQueue = new Vector3(j, 0, -20);
+        //     passengers[j].transform.DOMove(endOfTheQueue, 2);
+        // }
+        // for (int j = 0; j < Calculator.Instance.P_List[Calculator.Instance.P_List.Count - Calculator.Instance.howManyGroupsInRide[0] + 1]; j++)
+        // {
+        //     Vector3 endOfTheQueue = new Vector3(j, 0, -20 - 1);
+        //     passengers[j + Calculator.Instance.P_List[Calculator.Instance.P_List.Count - Calculator.Instance.howManyGroupsInRide[0]]].transform.DOMove(endOfTheQueue, 2);
+        // }
 
         yield return new WaitForSeconds(2);
         foreach (GameObject passenger in passengers)
