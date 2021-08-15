@@ -6,14 +6,21 @@ using System.Linq;
 
 public class Creator : MonoBehaviour, IEndOfRideObserver
 {
+    public static Creator Instance;
     [SerializeField] Calculator calculator;
     RollerCoasterController rollerCoasterController;
 
     [SerializeField] GameObject characterPrefab;
     public List<GameObject> group;
-    // int dailyRideCount = 0;
+    public List<GameObject> passengers;
 
     [SerializeField] Material[] materials;
+    
+    private void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+    }
 
     void Start()
     {
@@ -60,31 +67,31 @@ public class Creator : MonoBehaviour, IEndOfRideObserver
 
     public void GetIn(List<int> dailyRideEarnings, List<GameObject> seats, int queue)
     {
-        List<GameObject> passengers = new List<GameObject>(); // Remove from all, add back when queue up.
+        passengers = new List<GameObject>(); // Remove from all, add back when queue up.
 
-        for (int i = 0; i < dailyRideEarnings[queue]; i++)
+        for (int i = 0; i < dailyRideEarnings[queue]; i++) // Go to the seats & adding to new list (passengers)
         {
             group[i].transform.DOMove(seats[i].transform.position, 1.2f + i * 0.05f);
             group[i].transform.parent = seats[i].transform;
 
             passengers.Add(group[i]);
         }
-        for (int i = dailyRideEarnings[queue]; i < group.Count; i++)
+        for (int i = dailyRideEarnings[queue]; i < group.Count; i++) // Go forward (others)
         {
             group[i].transform.DOMoveZ(group[i].transform.position.z + 2 * Calculator.Instance.howManyGroupsInRide[queue], 2);
         }
-        for (int i = 0; i < dailyRideEarnings[queue]; i++)
+        for (int i = 0; i < dailyRideEarnings[queue]; i++) // Remove from group (passengers)
         {
-            group.Remove(group[0]);                       // Remove from all.
+            group.Remove(group[0]);
         }
-        StartCoroutine(WaitForCustomersToGetOn(2f + (queue - 1) * 0.05f, passengers));
+        StartCoroutine(WaitForCustomersToGetOn(2f + (queue - 1) * 0.02f));
     }
 
-    IEnumerator WaitForCustomersToGetOn(float delay, List<GameObject> passengers)
+    IEnumerator WaitForCustomersToGetOn(float delay)
     {
         yield return new WaitForSeconds(delay);
 
-        rollerCoasterController.Ride(passengers);
+        rollerCoasterController.StartRide();
     }
 
     #endregion

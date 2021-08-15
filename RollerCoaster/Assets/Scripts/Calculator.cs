@@ -43,8 +43,10 @@ public class Calculator : MonoBehaviour
             P_List.Add(day_Info.Pi[i]);
         }
 
-        FindObjectOfType<Creator>().Init_FromCalculator(P_List, N);
+        Creator.Instance.Init_FromCalculator(P_List, N);
     }
+
+    #region LOGIC
 
     public int Calculate() // IMPORTANT TO DO: bir grup birden çok binebiliyor. Örn: L:100,N:1,Pi:[2];
     {
@@ -80,34 +82,29 @@ public class Calculator : MonoBehaviour
                 }
                 else
                 {
-
                     howManyGroupsInRide.Add(countt);
-
                     currentRideCapacity = temporaryDirham;
                     dailyRideEarnings.Add(currentRideCapacity);
-
                     temporaryDirham = 0;
                     C--;
                     available = false;
 
-
                     foreach (int fgs in holder)
                     {
                         P_List.Add(fgs);
-                        Debug.Log(P_List.Count);
                     }
                 }
-
-
             }
         }
 
         return dirham;
     }
 
+    #endregion
+
     public void StartSimulation()
     {
         Calculate();
-        FindObjectOfType<Creator>().ReadyToGetIn(dailyRideEarnings);
+        Creator.Instance.ReadyToGetIn(dailyRideEarnings);
     }
 }

@@ -3,18 +3,66 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using System.Linq;
+using System;
 
 public class RollerCoasterController : MonoBehaviour
 {
-    // public enum States { Ride, Finish, Drop }
-    // [SerializeField] States currentState;
+    public enum States { Idle, Ride, Finish, Drop }
+    public States currentState;
+
     public int length;
     [SerializeField] GameObject rollerCoasterModule;
     List<GameObject> modules;
     GameObject firstVagoon;
     Vector3 firstVagoonsFirstPosition;
 
-    public int queue;
+    #region States
+    public void UpdateStates()
+    {
+        switch (currentState)
+        {
+            case States.Idle:
+                Idle();
+                break;
+            case States.Ride:
+                Ride();
+                break;
+            case States.Finish:
+                Finish();
+                break;
+            case States.Drop:
+                Drop();
+                break;
+        }
+    }
+
+    private void Idle()
+    {
+
+    }
+    private void Ride()
+    {
+        firstVagoonsFirstPosition = firstVagoon.transform.position;
+
+        Globals.rollerCoasterSpeed = 60;
+
+        // StartCoroutine(FinishTheRide(FindObjectOfType<Creator>().passengers));
+        currentState = States.Finish;
+        UpdateStates();
+    }
+    private void Finish()
+    {
+        StartCoroutine(FinishTheRide(FindObjectOfType<Creator>().passengers));
+    }
+
+    private void Drop()
+    {
+        StartCoroutine(GetOffTheRollerCoaster(FindObjectOfType<Creator>().passengers));
+    }
+
+    #endregion
+
+    #region Create Roller Coaster Vagoons
 
     public void ArrangeSize()
     {
@@ -40,63 +88,61 @@ public class RollerCoasterController : MonoBehaviour
         return modules;
     }
 
-    #region Ride
+    #endregion
 
-    public void Ride(List<GameObject> passengers)
+    public void StartRide()
     {
-        firstVagoonsFirstPosition = firstVagoon.transform.position;
-
-        foreach (GameObject module in modules)
-        {
-            Vector3 startPos = module.transform.position;
-
-            module.GetComponent<Follower_RollerCoaster>().speed = 60;
-        }
-
-        StartCoroutine(FinishTheRide(passengers));
+        currentState = RollerCoasterController.States.Ride;
+        UpdateStates();
     }
-    IEnumerator FinishTheRide(List<GameObject> passengers) // Değiştiriyom
+
+    #region Finish State
+
+    IEnumerator FinishTheRide(List<GameObject> passengers)
     {
-        yield return new WaitForSeconds(1f); // Dont detect first second
+        yield return new WaitForSeconds(1f); // Do not detect first second (for trigger)
         bool contin = true;
-        
+
         while (contin)
         {
-            if (Vector3.Distance(firstVagoonsFirstPosition, firstVagoon.transform.position) < 0.6f)
-            {
-                foreach (GameObject module in modules)
-                    module.GetComponent<Follower_RollerCoaster>().speed = 0;
+            if (Vector3.Distance(firstVagoonsFirstPosition, firstVagoon.transform.position) < 10f) // Slow down
+                Globals.rollerCoasterSpeed = 10;                      // TO DO: do it gently
 
-                StartCoroutine(GetOffTheRollerCoaster(passengers));
+            if (Vector3.Distance(firstVagoonsFirstPosition, firstVagoon.transform.position) < 0.6f) // Stop (if frame can catch)
+            {
+                Globals.rollerCoasterSpeed = 0;
+
+                // StartCoroutine(GetOffTheRollerCoaster(passengers));
+                currentState = States.Drop;
+                UpdateStates();
 
                 contin = false;
             }
-            yield return null;
+
+            yield return null; // Control every frame to catch the roller coaster aproximately same position and stop;
         }
     }
 
+    #endregion
+
+    #region Drop State
+
     IEnumerator GetOffTheRollerCoaster(List<GameObject> passengers)
     {
-        yield return new WaitForSeconds(0.1f);
-        queue = 0;
+        yield return new WaitForSeconds(0.1f); // Passengers unbuckle their seat belts (not added)
 
-        int index = Calculator.Instance.N - Calculator.Instance.howManyGroupsInRide[queue];
-
-        for (int i = 0; i < Calculator.Instance.howManyGroupsInRide[queue]; i++)
+        for (int j = 0; j < Calculator.Instance.dailyRideEarnings[Globals.dailyWorkCount]; j++) // send passengers to the back of the queue
         {
-            for (int j = 0; j < Calculator.Instance.dailyRideEarnings[Globals.dailyWorkCount]; j++)
-            {
-                Vector3 endOfTheQueue = new Vector3(j, 0, -2 * (Calculator.Instance.N + (index)));
+            Vector3 endOfTheQueue = new Vector3(j, 0, -5 * (Calculator.Instance.N));
 
-                passengers[j].transform.DOMove(endOfTheQueue, 2);
-            }
+            passengers[j].transform.DOMove(endOfTheQueue, 2);
         }
 
         yield return new WaitForSeconds(0.5f);
         foreach (GameObject passenger in passengers)
         {
             passenger.transform.parent = null;
-            FindObjectOfType<Creator>().group.Add(passenger);    // Add passengers to all.
+            Creator.Instance.group.Add(passenger);    // Add passengers to all.
         }
 
         GameManager.Instance.NotifyGameStartObservers();

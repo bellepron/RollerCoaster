@@ -14,7 +14,6 @@ public class Day_Info : ScriptableObject
     [Space]
     [Range(1, 1000)] public int N;
 
-    
 
     [Header("Group Sizes")] // N times Pi input ************
     [Space]
@@ -23,7 +22,18 @@ public class Day_Info : ScriptableObject
     {
         get
         {
-            for (int i = 0; i < Pi.Length; i++)
+            int[] temp = Pi;
+            Pi = new int[N];
+
+            for (int i = 0; i < N; i++)
+            {
+                if (i < temp.Length)
+                    Pi[i] = temp[i];
+                else
+                    Pi[i] = Random.Range(1, L);
+            }
+
+            for (int i = 0; i < N; i++)
             {
                 if (Pi[i] > L)
                     Pi[i] = L;

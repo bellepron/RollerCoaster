@@ -35,10 +35,10 @@ RenderSettings:
   m_DefaultReflectionMode: 0
   m_DefaultReflectionResolution: 128
   m_ReflectionBounces: 1
-  m_ReflectionIntensity: 1
+  m_ReflectionIntensity: 0.39
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.28380483, g: 0.31746668, b: 0.3704271, a: 0.39}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -227,10 +227,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c5c8c47c17b6a84b947bc128cbe5e2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentState: 0
   length: 0
   rollerCoasterModule: {fileID: 5109585247749546924, guid: 6293c61dd6c6d5a4ab767cda8efb45ff,
     type: 3}
-  queue: -1
 --- !u!1 &81983058
 GameObject:
   m_ObjectHideFlags: 0
@@ -906,7 +906,7 @@ GameObject:
   - component: {fileID: 879130459}
   - component: {fileID: 879130458}
   m_Layer: 0
-  m_Name: Creator
+  m_Name: Creator (You can add more materials)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -928,11 +928,13 @@ MonoBehaviour:
   characterPrefab: {fileID: 581895865506006191, guid: 5f276d41747980e4ebe3fc3b70f3c792,
     type: 3}
   group: []
+  passengers: []
   materials:
   - {fileID: 2100000, guid: 6c4c425785162a54eb1f7ea6d475915d, type: 2}
   - {fileID: 2100000, guid: cc359cb3a7672b24bbe034b77a27961b, type: 2}
   - {fileID: 2100000, guid: 36750ac6e1f839a4e9f3baed75efec33, type: 2}
   - {fileID: 2100000, guid: c49faa2518443034e863f3b4ff337e07, type: 2}
+  - {fileID: 2100000, guid: ceafd5fc92ae73c4bbaa5f27e1ef7bf0, type: 2}
 --- !u!4 &879130459
 Transform:
   m_ObjectHideFlags: 0

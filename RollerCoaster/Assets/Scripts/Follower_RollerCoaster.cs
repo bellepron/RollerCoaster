@@ -6,7 +6,6 @@ using PathCreation;
 public class Follower_RollerCoaster : MonoBehaviour
 {
     PathCreator pathCreator;
-    public float speed = 0;
     public float distanceTravelled;
 
     void Start()
@@ -16,7 +15,7 @@ public class Follower_RollerCoaster : MonoBehaviour
 
     void Update()
     {
-        distanceTravelled += speed * Time.deltaTime;
+        distanceTravelled += Globals.rollerCoasterSpeed * Time.deltaTime;
         transform.position = pathCreator.path.GetPointAtDistance(distanceTravelled);
         transform.rotation = pathCreator.path.GetRotationAtDistance(distanceTravelled);
     }
