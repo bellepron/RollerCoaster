@@ -23,6 +23,7 @@ public class Calculator : MonoBehaviour
     public List<int> dailyRideEarnings;
 
     public List<int> howManyGroupsInRide;
+    public int currentRideCapacity;
 
     private void Awake()
     {
@@ -32,7 +33,6 @@ public class Calculator : MonoBehaviour
 
     void Start()
     {
-        Time.timeScale = 3f;
         L = day_Info.L;
         C = day_Info.C;
         N = day_Info.N;
@@ -56,7 +56,7 @@ public class Calculator : MonoBehaviour
         {
             bool available = true;
             temporaryDirham = 0;
-            int currentRideCapacity = 0;
+            currentRideCapacity = 0;
 
             int countt = 0;
 
@@ -77,6 +77,7 @@ public class Calculator : MonoBehaviour
                 else
                 {
                     howManyGroupsInRide.Add(countt);
+                    Debug.Log(temporaryDirham);
 
                     currentRideCapacity = temporaryDirham; // sürüşten gelen para (bunu listeye ekle)(listedeki sayıların toplamı günlük kazanç olacak)
                     dailyRideEarnings.Add(currentRideCapacity);

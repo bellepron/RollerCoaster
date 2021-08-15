@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour, IEndOfRideObserver
 
         endOfRideObservers = new List<IEndOfRideObserver>();
         AddEndOfRideObserver(this);
+
+        // Time.timeScale = 3f;
     }
     void Update()
     {

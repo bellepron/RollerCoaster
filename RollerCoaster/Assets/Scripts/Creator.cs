@@ -13,29 +13,40 @@ public class Creator : MonoBehaviour, IEndOfRideObserver
     public List<GameObject> group;
     // int dailyRideCount = 0;
 
+    [SerializeField] Material[] materials;
+
     void Start()
     {
         GameManager.Instance.AddEndOfRideObserver(this);
     }
+
+    #region Creation
 
     public void Init_FromCalculator(List<int> Pi_list, int N)
     {
         rollerCoasterController = FindObjectOfType<RollerCoasterController>();
         group = new List<GameObject>();
 
-        for (int i = 0; i < N; i++)
+        for (int i = 0; i < N; i++) // Create customers
         {
             for (int j = 0; j < Pi_list[i]; j++)
-                AddToList(Instantiate(characterPrefab, new Vector3(j * 1, 0, -i * 2f), Quaternion.identity));
+            {
+                GameObject go = Instantiate(characterPrefab, new Vector3(j * 1, 0, -i * 2f), Quaternion.identity) as GameObject;
+                SetCustomerMaterial(go, i);
+                AddToList(go);
+            }
         }
-
-        // group = group.OrderBy(gameObject => gameObject.transform.position.z).ToList();
+    }
+    void SetCustomerMaterial(GameObject go, int i)
+    {
+        go.GetComponent<MeshRenderer>().material = materials[i % materials.Length];
     }
     void AddToList(GameObject go)
     {
         group.Add(go);
     }
 
+    #endregion
 
     #region Ride
 

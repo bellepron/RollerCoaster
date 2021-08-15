@@ -9,6 +9,8 @@ public class RollerCoasterController : MonoBehaviour
     public int length;
     [SerializeField] GameObject rollerCoasterModule;
     List<GameObject> modules;
+    GameObject firstVagoon;
+    Vector3 firstVagoonsFirstPosition;
 
     public int queue = -1;
 
@@ -19,8 +21,22 @@ public class RollerCoasterController : MonoBehaviour
 
         for (int i = 0; i < length; i++)
         {
-            modules.Add(Instantiate(rollerCoasterModule, transform.position + new Vector3(i * 1, 0, 0), Quaternion.identity));
+            GameObject vagoon = Instantiate(rollerCoasterModule, transform.position + new Vector3(i * 1, 0, 0), Quaternion.identity) as GameObject;
+            modules.Add(vagoon);
+
+            vagoon.AddComponent<Follower_RollerCoaster>();
+            vagoon.GetComponent<Follower_RollerCoaster>().distanceTravelled = -i * 1;
+
+            if (i == 0)
+            {
+                // vagoon.AddComponent<Rigidbody>();
+                // vagoon.AddComponent<FirstVagoon>();
+                firstVagoon = vagoon;
+                firstVagoonsFirstPosition = firstVagoon.transform.position;
+            }
         }
+
+        firstVagoonsFirstPosition = firstVagoon.transform.position; // Init
     }
     public List<GameObject> GetSeats()
     {
@@ -31,22 +47,45 @@ public class RollerCoasterController : MonoBehaviour
 
     public void Ride(List<GameObject> passengers)
     {
+        firstVagoonsFirstPosition = firstVagoon.transform.position;
+
         foreach (GameObject module in modules)
         {
             Vector3 startPos = module.transform.position;
 
-            module.transform.DOMove(new Vector3(-10, 1, 20), 1).OnComplete(() =>
-            module.transform.DOMove(new Vector3(10, 1, 20), 1).OnComplete(() =>
-            module.transform.DOMove(startPos, 1)
-            ));
+            // module.transform.DOMove(new Vector3(-10, 1, 20), 1).OnComplete(() =>
+            // module.transform.DOMove(new Vector3(10, 1, 20), 1).OnComplete(() =>
+            // module.transform.DOMove(startPos, 1)
+            // ));
+            module.GetComponent<Follower_RollerCoaster>().speed = 60;
         }
 
-        StartCoroutine(GetOffTheRollerCoaster(passengers));
+        // StartCoroutine(GetOffTheRollerCoaster(passengers));
+
+        StartCoroutine(FinishTheRide(passengers));
+    }
+    IEnumerator FinishTheRide(List<GameObject> passengers)
+    {
+        yield return new WaitForSeconds(1f);
+        bool contin = true;
+        while (contin)
+        {
+            if (Vector3.Distance(firstVagoonsFirstPosition, firstVagoon.transform.position) < 0.5f)
+            {
+                foreach (GameObject module in modules)
+                    module.GetComponent<Follower_RollerCoaster>().speed = 0;
+
+                StartCoroutine(GetOffTheRollerCoaster(passengers));
+
+                contin = false;
+            }
+            yield return null;
+        }
     }
 
     IEnumerator GetOffTheRollerCoaster(List<GameObject> passengers)
     {
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(0.1f);
         // int queue = 0;
         queue = 0;
         //        Debug.Log(queue);
@@ -58,30 +97,14 @@ public class RollerCoasterController : MonoBehaviour
         for (int i = 0; i < Calculator.Instance.howManyGroupsInRide[queue]; i++)
         {
             // for (int j = 0; j < Calculator.Instance.P_List[index + i]; j++)
-            Debug.Log(Calculator.Instance.temporaryDirham);
+
             for (int j = 0; j < Calculator.Instance.temporaryDirham; j++)
             {
                 Vector3 endOfTheQueue = new Vector3(j, 0, -2 * (index + i));
 
-                // Debug.Log("10 kere");
-
-                // int sum = 0;
-                // for (int v = 0; v < i; v++)
-                // {
-                //     sum += Calculator.Instance.P_List[index + v];
-                //     Debug.Log(sum);
-                // }
-                // Debug.Log(j + Calculator.Instance.P_List[index] + Calculator.Instance.P_List[index + 1] + Calculator.Instance.P_List[index + 2]);
                 if (i == 0)
                     passengers[j].transform.DOMove(endOfTheQueue, 2);
-                // if (i == 1)
-                //     passengers[j + Calculator.Instance.P_List[index] + 1].transform.DOMove(endOfTheQueue, 2);
-                // if (i == 2)
-                //     passengers[j + Calculator.Instance.P_List[index] + Calculator.Instance.P_List[index + 1]].transform.DOMove(endOfTheQueue, 2);
-                // if (i == 3)
-                //     passengers[j + Calculator.Instance.P_List[index] + Calculator.Instance.P_List[index + 1] + Calculator.Instance.P_List[index + 2]].transform.DOMove(endOfTheQueue, 2);
-                // if (i == 4)
-                //     passengers[j + Calculator.Instance.P_List[index] + Calculator.Instance.P_List[index + 1] + Calculator.Instance.P_List[index + 2] + Calculator.Instance.P_List[index + 3]].transform.DOMove(endOfTheQueue, 2);
+
             }
         }
 
@@ -92,7 +115,6 @@ public class RollerCoasterController : MonoBehaviour
             FindObjectOfType<Creator>().group.Add(passenger);    // Add passengers to all.
         }
 
-        // Notify an observer or change an event
         GameManager.Instance.NotifyGameStartObservers();
     }
 
