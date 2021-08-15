@@ -86,14 +86,10 @@ public class RollerCoasterController : MonoBehaviour
     IEnumerator GetOffTheRollerCoaster(List<GameObject> passengers)
     {
         yield return new WaitForSeconds(0.1f);
-        // int queue = 0;
         queue = 0;
-        //        Debug.Log(queue);
-        // int index = FindObjectOfType<Creator>().group.Count - Calculator.Instance.howManyGroupsInRide[queue];
-        int index = Calculator.Instance.N - Calculator.Instance.howManyGroupsInRide[queue]; // Toplam Grup sayısından ilk sürüşteki grup sayısını çıkart (Yanlış olmuş)
-        // L=10, N=5, ilk grup 10 => index 4 (yani son index)
-        // howManyGroupsInRide[queue]=1 olmazsa sıkıntı. 2 olduğunda index=3
-        // index=3 iken
+
+        int index = Calculator.Instance.N - Calculator.Instance.howManyGroupsInRide[queue];
+
         for (int i = 0; i < Calculator.Instance.howManyGroupsInRide[queue]; i++)
         {
             // for (int j = 0; j < Calculator.Instance.P_List[index + i]; j++)
@@ -108,7 +104,7 @@ public class RollerCoasterController : MonoBehaviour
             }
         }
 
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
         foreach (GameObject passenger in passengers)
         {
             passenger.transform.parent = null;
