@@ -1,11 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviour, IEndOfRideObserver
 {
     public static GameManager Instance;
     private List<IEndOfRideObserver> endOfRideObservers;
+
+    [SerializeField] GameObject startButton;
+    [SerializeField] TextMeshProUGUI dirhamText;
+    int dirham = 0;
 
     void Awake()
     {
@@ -13,6 +18,17 @@ public class GameManager : MonoBehaviour
             Instance = this;
 
         endOfRideObservers = new List<IEndOfRideObserver>();
+        AddEndOfRideObserver(this);
+    }
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space)) StartButton();
+    }
+
+    public void StartButton()
+    {
+        startButton.SetActive(false);
+        Calculator.Instance.StartSimulation();
     }
 
     #region Observer Funcs
@@ -37,4 +53,10 @@ public class GameManager : MonoBehaviour
     }
 
     #endregion
+
+    public void GoNextRide_IfExists()
+    {
+        dirham += Calculator.Instance.dailyRideEarnings[Globals.dailyWorkCount];
+        dirhamText.text = dirham.ToString();
+    }
 }

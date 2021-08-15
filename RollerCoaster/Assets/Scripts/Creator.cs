@@ -41,23 +41,15 @@ public class Creator : MonoBehaviour, IEndOfRideObserver
 
     public void ReadyToGetIn(List<int> dailyRideEarnings)
     {
-        // int a = 0; // Globalsta dailyWorkCount
-
         List<GameObject> seats = rollerCoasterController.GetSeats();
 
-        // for (; a < dailyRideEarnings.Count;) // Sırayla yap.
-        // {
-        //     a++;
-        //     GetIn(dailyRideEarnings, seats, a);
-        // }
-        Debug.Log(dailyRideEarnings[0]);
-        Debug.Log(seats.Count);
+        // Debug.Log(dailyRideEarnings[0]);
         GetIn(dailyRideEarnings, seats, Globals.dailyWorkCount);
     }
 
     public void GetIn(List<int> dailyRideEarnings, List<GameObject> seats, int queue)
     {
-        List<GameObject> passengers = new List<GameObject>(); // Remove from all, add back when queue up !!!!!!!
+        List<GameObject> passengers = new List<GameObject>(); // Remove from all, add back when queue up.
 
         for (int i = 0; i < dailyRideEarnings[queue]; i++)
         {
@@ -65,6 +57,10 @@ public class Creator : MonoBehaviour, IEndOfRideObserver
             group[i].transform.parent = seats[i].transform;
 
             passengers.Add(group[i]);
+        }
+        for (int i = dailyRideEarnings[queue]; i < group.Count; i++)
+        {
+            group[i].transform.DOMoveZ(group[i].transform.position.z + 2 * Calculator.Instance.howManyGroupsInRide[queue], 2);
         }
         for (int i = 0; i < dailyRideEarnings[queue]; i++)
         {
@@ -82,7 +78,8 @@ public class Creator : MonoBehaviour, IEndOfRideObserver
 
     public void GoNextRide_IfExists()
     {
-        Debug.Log("Bittiii");
+        // group = group.OrderBy(gameObject => gameObject.transform.position.z).ToList();
+
         Globals.dailyWorkCount++;
         if (Globals.dailyWorkCount < calculator.dailyRideEarnings.Count)
         {

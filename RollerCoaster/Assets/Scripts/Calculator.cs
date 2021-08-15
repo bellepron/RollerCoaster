@@ -8,13 +8,14 @@ public class Calculator : MonoBehaviour
     public static Calculator Instance;
     [SerializeField] Day_Info day_Info;
 
-    int L;
+    public int L;
     int C;
     public int N;
     int[] Pi;
     public List<int> P_List;
 
     public int dirham = 0;
+    public int temporaryDirham;
     int firstGroupSize;
 
 
@@ -31,6 +32,7 @@ public class Calculator : MonoBehaviour
 
     void Start()
     {
+        Time.timeScale = 3f;
         L = day_Info.L;
         C = day_Info.C;
         N = day_Info.N;
@@ -48,14 +50,14 @@ public class Calculator : MonoBehaviour
     {
         howManyGroupList = new List<int>();
         dailyRideEarnings = new List<int>();
+        howManyGroupsInRide = new List<int>();
 
         while (C > 0)
         {
             bool available = true;
-            int temporaryDirham = 0;
+            temporaryDirham = 0;
             int currentRideCapacity = 0;
 
-            howManyGroupsInRide = new List<int>();
             int countt = 0;
 
 
@@ -89,14 +91,14 @@ public class Calculator : MonoBehaviour
         return dirham;
     }
 
-    private void Update()
+    public void StartSimulation()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Calculate();
-            FindObjectOfType<Creator>().ReadyToGetIn(dailyRideEarnings);
-            Debug.Log(Calculator.Instance.P_List[Calculator.Instance.P_List.Count - Calculator.Instance.howManyGroupsInRide[0] + 1]);
-            // Debug.Log(howManyGroupsInRide[0]);
-        }
+        Calculate();
+        FindObjectOfType<Creator>().ReadyToGetIn(dailyRideEarnings);
+        // Debug.Log(Calculator.Instance.P_List[Calculator.Instance.P_List.Count - Calculator.Instance.howManyGroupsInRide[0] + 1]);
+        // Debug.Log(howManyGroupsInRide[0]);
+        // Debug.Log(howManyGroupsInRide[1]);
+        // Debug.Log(howManyGroupsInRide[2]);
+        // Debug.Log(howManyGroupsInRide[3]);
     }
 }
