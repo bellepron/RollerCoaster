@@ -6,13 +6,15 @@ using System.Linq;
 
 public class RollerCoasterController : MonoBehaviour
 {
+    // public enum States { Ride, Finish, Drop }
+    // [SerializeField] States currentState;
     public int length;
     [SerializeField] GameObject rollerCoasterModule;
     List<GameObject> modules;
     GameObject firstVagoon;
     Vector3 firstVagoonsFirstPosition;
 
-    public int queue = -1;
+    public int queue;
 
     public void ArrangeSize()
     {
@@ -28,12 +30,7 @@ public class RollerCoasterController : MonoBehaviour
             vagoon.GetComponent<Follower_RollerCoaster>().distanceTravelled = -i * 1;
 
             if (i == 0)
-            {
-                // vagoon.AddComponent<Rigidbody>();
-                // vagoon.AddComponent<FirstVagoon>();
                 firstVagoon = vagoon;
-                firstVagoonsFirstPosition = firstVagoon.transform.position;
-            }
         }
 
         firstVagoonsFirstPosition = firstVagoon.transform.position; // Init
@@ -53,24 +50,19 @@ public class RollerCoasterController : MonoBehaviour
         {
             Vector3 startPos = module.transform.position;
 
-            // module.transform.DOMove(new Vector3(-10, 1, 20), 1).OnComplete(() =>
-            // module.transform.DOMove(new Vector3(10, 1, 20), 1).OnComplete(() =>
-            // module.transform.DOMove(startPos, 1)
-            // ));
             module.GetComponent<Follower_RollerCoaster>().speed = 60;
         }
 
-        // StartCoroutine(GetOffTheRollerCoaster(passengers));
-
         StartCoroutine(FinishTheRide(passengers));
     }
-    IEnumerator FinishTheRide(List<GameObject> passengers)
+    IEnumerator FinishTheRide(List<GameObject> passengers) // Değiştiriyom
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1f); // Dont detect first second
         bool contin = true;
+        
         while (contin)
         {
-            if (Vector3.Distance(firstVagoonsFirstPosition, firstVagoon.transform.position) < 0.5f)
+            if (Vector3.Distance(firstVagoonsFirstPosition, firstVagoon.transform.position) < 0.6f)
             {
                 foreach (GameObject module in modules)
                     module.GetComponent<Follower_RollerCoaster>().speed = 0;
@@ -92,19 +84,15 @@ public class RollerCoasterController : MonoBehaviour
 
         for (int i = 0; i < Calculator.Instance.howManyGroupsInRide[queue]; i++)
         {
-            // for (int j = 0; j < Calculator.Instance.P_List[index + i]; j++)
-
-            for (int j = 0; j < Calculator.Instance.temporaryDirham; j++)
+            for (int j = 0; j < Calculator.Instance.dailyRideEarnings[Globals.dailyWorkCount]; j++)
             {
-                Vector3 endOfTheQueue = new Vector3(j, 0, -2 * (index + i));
+                Vector3 endOfTheQueue = new Vector3(j, 0, -2 * (Calculator.Instance.N + (index)));
 
-                if (i == 0)
-                    passengers[j].transform.DOMove(endOfTheQueue, 2);
-
+                passengers[j].transform.DOMove(endOfTheQueue, 2);
             }
         }
 
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.5f);
         foreach (GameObject passenger in passengers)
         {
             passenger.transform.parent = null;

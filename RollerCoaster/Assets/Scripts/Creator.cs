@@ -87,16 +87,14 @@ public class Creator : MonoBehaviour, IEndOfRideObserver
         rollerCoasterController.Ride(passengers);
     }
 
+    #endregion
     public void GoNextRide_IfExists()
     {
-        // group = group.OrderBy(gameObject => gameObject.transform.position.z).ToList();
-
         Globals.dailyWorkCount++;
+
         if (Globals.dailyWorkCount < calculator.dailyRideEarnings.Count)
         {
             GetIn(calculator.dailyRideEarnings, rollerCoasterController.GetSeats(), Globals.dailyWorkCount);
         }
     }
-
-    #endregion
 }

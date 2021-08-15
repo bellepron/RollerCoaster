@@ -36,7 +36,7 @@ public class Calculator : MonoBehaviour
         L = day_Info.L;
         C = day_Info.C;
         N = day_Info.N;
-        Pi = day_Info.Pi;
+        Pi = day_Info._pi;
 
         for (int i = 0; i < N; i++)
         {
@@ -52,40 +52,53 @@ public class Calculator : MonoBehaviour
         dailyRideEarnings = new List<int>();
         howManyGroupsInRide = new List<int>();
 
+
         while (C > 0)
         {
             bool available = true;
             temporaryDirham = 0;
             currentRideCapacity = 0;
-
             int countt = 0;
+
+            List<int> holder = new List<int>();
 
 
             for (; available;)
             {
-                firstGroupSize = P_List[0];
+                if (P_List.Count > 0)
+                    firstGroupSize = P_List[0];
 
-                if (L - temporaryDirham - firstGroupSize >= 0)
+                if (L - temporaryDirham - firstGroupSize >= 0 && P_List.Count > 0)
                 {
                     P_List.RemoveAt(0);
                     temporaryDirham += firstGroupSize;
                     dirham += firstGroupSize;
-                    P_List.Add(firstGroupSize);
+                    // P_List.Add(firstGroupSize);
+                    holder.Add(firstGroupSize);
 
                     countt++;
                 }
                 else
                 {
-                    howManyGroupsInRide.Add(countt);
-                    Debug.Log(temporaryDirham);
 
-                    currentRideCapacity = temporaryDirham; // sürüşten gelen para (bunu listeye ekle)(listedeki sayıların toplamı günlük kazanç olacak)
+                    howManyGroupsInRide.Add(countt);
+
+                    currentRideCapacity = temporaryDirham;
                     dailyRideEarnings.Add(currentRideCapacity);
 
                     temporaryDirham = 0;
                     C--;
                     available = false;
+
+
+                    foreach (int fgs in holder)
+                    {
+                        P_List.Add(fgs);
+                        Debug.Log(P_List.Count);
+                    }
                 }
+
+
             }
         }
 
@@ -96,10 +109,5 @@ public class Calculator : MonoBehaviour
     {
         Calculate();
         FindObjectOfType<Creator>().ReadyToGetIn(dailyRideEarnings);
-        // Debug.Log(Calculator.Instance.P_List[Calculator.Instance.P_List.Count - Calculator.Instance.howManyGroupsInRide[0] + 1]);
-        // Debug.Log(howManyGroupsInRide[0]);
-        // Debug.Log(howManyGroupsInRide[1]);
-        // Debug.Log(howManyGroupsInRide[2]);
-        // Debug.Log(howManyGroupsInRide[3]);
     }
 }
