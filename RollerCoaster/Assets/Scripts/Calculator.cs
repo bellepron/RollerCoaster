@@ -52,7 +52,7 @@ public class Calculator : MonoBehaviour
 
     public int Calculate() // IMPORTANT TO DO: bir grup birden çok binebiliyor. Örn: L:100,N:1,Pi:[2];
     {
-        howManyGroupList = new List<int>();
+        howManyGroupList = new List<int>(); // Bunları en üstte tanımlayıp burda .Clear() kullan.
         dailyRideEarnings = new List<int>();
         howManyGroupsInRide = new List<int>();
 

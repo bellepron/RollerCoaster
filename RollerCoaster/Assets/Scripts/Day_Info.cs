@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
+
 [CreateAssetMenu(menuName = "Scriptable Objects/Day/New Day Info")]
 public class Day_Info : ScriptableObject
 {
@@ -17,7 +19,7 @@ public class Day_Info : ScriptableObject
 
     [Header("Group Sizes")] // N times Pi input ************
     [Space]
-    [Range(1, 10000000)] [SerializeField] public int[] Pi;
+    [Range(1, 10000000)] [SerializeField] public int[] Pi; // Listeye çevir
     public int[] _pi
     {
         get
