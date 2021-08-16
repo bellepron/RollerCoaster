@@ -22,7 +22,7 @@ public class Calculator : MonoBehaviour
     List<int> howManyGroupList;
     public List<int> dailyRideEarnings;
 
-    public List<int> howManyGroupsInRide;
+    // public List<int> howManyGroupsInRide;
     public int currentRideCapacity;
 
     private void Awake()
@@ -54,7 +54,7 @@ public class Calculator : MonoBehaviour
     {
         howManyGroupList = new List<int>(); // Bunları en üstte tanımlayıp burda .Clear() kullan.
         dailyRideEarnings = new List<int>();
-        howManyGroupsInRide = new List<int>();
+        // howManyGroupsInRide = new List<int>();
 
 
         while (C > 0)
@@ -84,7 +84,7 @@ public class Calculator : MonoBehaviour
                 }
                 else
                 {
-                    howManyGroupsInRide.Add(countt);
+                    // howManyGroupsInRide.Add(countt);
                     currentRideCapacity = temporaryDirham;
                     dailyRideEarnings.Add(currentRideCapacity);
                     temporaryDirham = 0;
