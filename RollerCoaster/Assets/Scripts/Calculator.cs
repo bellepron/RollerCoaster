@@ -6,7 +6,7 @@ using System;
 public class Calculator : MonoBehaviour
 {
     public static Calculator Instance;
-    [SerializeField] Day_Info day_Info;
+    Day_Info day_Info;
 
     public int L;
     int C;
@@ -31,8 +31,10 @@ public class Calculator : MonoBehaviour
             Instance = this;
     }
 
-    void Start()
+    public void StartNew(Day_Info day_Info)
     {
+        day_Info = FindObjectOfType<GameSceneController>().day_Info;
+
         L = day_Info.L;
         C = day_Info.C;
         N = day_Info.N;

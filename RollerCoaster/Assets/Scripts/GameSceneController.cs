@@ -4,16 +4,17 @@ using UnityEngine;
 
 public class GameSceneController : MonoBehaviour
 {
-    [SerializeField] Day_Info day_Info;
+    public Day_Info day_Info;
 
     void Start()
     {
         CreateRollerCoaster();
+        StartNew();
     }
 
-    void Update()
+    public void StartNew()
     {
-
+        Calculator.Instance.StartNew(day_Info);
     }
 
     void CreateRollerCoaster()

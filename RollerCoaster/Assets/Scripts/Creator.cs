@@ -78,7 +78,8 @@ public class Creator : MonoBehaviour, IEndOfRideObserver
         }
         for (int i = dailyRideEarnings[queue]; i < group.Count; i++) // Go forward (others)
         {
-            group[i].transform.DOMoveZ(group[i].transform.position.z + 2 * Calculator.Instance.howManyGroupsInRide[queue], 2);
+            // group[i].transform.DOMoveZ(group[i].transform.position.z + 2 * Calculator.Instance.howManyGroupsInRide[queue], 2);
+            group[i].transform.DOMoveZ(group[i].transform.position.z + 2, 2); // TO DO: fix&arrange
         }
         for (int i = 0; i < dailyRideEarnings[queue]; i++) // Remove from group (passengers)
         {

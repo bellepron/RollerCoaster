@@ -4,6 +4,7 @@ using UnityEngine;
 using DG.Tweening;
 using System.Linq;
 using System;
+using Random = UnityEngine.Random;
 
 public class RollerCoasterController : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class RollerCoasterController : MonoBehaviour
     List<GameObject> modules;
     GameObject firstVagoon;
     Vector3 firstVagoonsFirstPosition;
+    [SerializeField] int rollerCoaster_Speed = 60;
 
     #region States
     public void UpdateStates()
@@ -44,7 +46,7 @@ public class RollerCoasterController : MonoBehaviour
     {
         firstVagoonsFirstPosition = firstVagoon.transform.position;
 
-        Globals.rollerCoasterSpeed = 60;
+        Globals.rollerCoasterSpeed = rollerCoaster_Speed;
 
         // StartCoroutine(FinishTheRide(FindObjectOfType<Creator>().passengers));
         currentState = States.Finish;
@@ -101,9 +103,9 @@ public class RollerCoasterController : MonoBehaviour
     IEnumerator FinishTheRide(List<GameObject> passengers)
     {
         yield return new WaitForSeconds(1f); // Do not detect first second (for trigger)
-        bool contin = true;
+        bool _continue = true;
 
-        while (contin)
+        while (_continue)
         {
             if (Vector3.Distance(firstVagoonsFirstPosition, firstVagoon.transform.position) < 10f) // Slow down
                 Globals.rollerCoasterSpeed = 10;                      // TO DO: do it gently
@@ -112,11 +114,10 @@ public class RollerCoasterController : MonoBehaviour
             {
                 Globals.rollerCoasterSpeed = 0;
 
-                // StartCoroutine(GetOffTheRollerCoaster(passengers));
                 currentState = States.Drop;
                 UpdateStates();
 
-                contin = false;
+                _continue = false;
             }
 
             yield return null; // Control every frame to catch the roller coaster aproximately same position and stop;
@@ -133,15 +134,16 @@ public class RollerCoasterController : MonoBehaviour
 
         for (int j = 0; j < Calculator.Instance.dailyRideEarnings[Globals.dailyWorkCount]; j++) // send passengers to the back of the queue
         {
-            Vector3 endOfTheQueue = new Vector3(j, 0, -5 * (Calculator.Instance.N));
+            Vector3 endOfTheQueue = new Vector3(j, 0, -2 * (Calculator.Instance.N - 1)); // TO DO: fix&arrange
 
-            passengers[j].transform.DOMove(endOfTheQueue, 2);
+            passengers[j].transform.DOMove(endOfTheQueue, 1);
         }
 
         yield return new WaitForSeconds(0.5f);
         foreach (GameObject passenger in passengers)
         {
             passenger.transform.parent = null;
+
             Creator.Instance.group.Add(passenger);    // Add passengers to all.
         }
 

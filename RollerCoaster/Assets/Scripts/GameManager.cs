@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class GameManager : MonoBehaviour, IEndOfRideObserver
@@ -9,8 +10,12 @@ public class GameManager : MonoBehaviour, IEndOfRideObserver
     private List<IEndOfRideObserver> endOfRideObservers;
 
     [SerializeField] GameObject startButton;
+    [SerializeField] GameObject restartButton;
     [SerializeField] TextMeshProUGUI dirhamText;
     int dirham = 0;
+    [SerializeField] Slider timeScaleSlider;
+    [SerializeField] TextMeshProUGUI timeScaleText;
+    int timeScaleMultiplier = 4;
 
     void Awake()
     {
@@ -20,11 +25,18 @@ public class GameManager : MonoBehaviour, IEndOfRideObserver
         endOfRideObservers = new List<IEndOfRideObserver>();
         AddEndOfRideObserver(this);
 
-        // Time.timeScale = 3f;
+        restartButton.SetActive(false);
+
     }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space)) StartButton();
+        ChangeTimeScale();
+    }
+
+    void ChangeTimeScale()
+    {
+        Time.timeScale = timeScaleSlider.value * timeScaleMultiplier;
+        timeScaleText.text = "Time Scale = " + (timeScaleSlider.value * timeScaleMultiplier).ToString();
     }
 
     public void StartButton()
